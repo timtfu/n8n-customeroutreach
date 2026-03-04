@@ -36,6 +36,7 @@ CREATE TABLE contacts (
     email_draft text,
     "Company_name" text
 );
+```
 ### Row Level Security (RLS) Policies
 
 To secure the database, enable RLS on both tables and apply the following baseline policies. These policies restrict all operations (Select, Insert, Update, Delete) to authenticated users. Execute this script in the Supabase SQL Editor:
