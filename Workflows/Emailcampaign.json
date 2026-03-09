@@ -5,8 +5,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -2448,
-        288
+        -2592,
+        240
       ],
       "id": "862aafbd-54b7-4b83-b225-539aff2db45b",
       "name": "When clicking ‘Execute workflow’"
@@ -14,13 +14,13 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT id, name, branche, website, pain_point, booking_mode, opening_hours_analysis, general_email\nFROM companies\nWHERE status = 'new'\nLIMIT 2;",
+        "query": "SELECT id, name, branche, website, pain_point, booking_mode, opening_hours_analysis, general_email\nFROM companies\nWHERE status = 'new'\nLIMIT 1;",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -2160,
+        -2336,
         448
       ],
       "id": "95dd382d-5142-4954-8dbd-4624685b81cf",
@@ -39,7 +39,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -1648,
+        -1280,
         448
       ],
       "id": "ee2c3370-3c7b-4a8b-8181-6e5c5b4896ec",
@@ -56,8 +56,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1296,
-        464
+        -1520,
+        448
       ],
       "id": "bc4e37d0-1a61-4ca0-a25b-7af7136e0824",
       "name": "Execute a SQL query1",
@@ -98,8 +98,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1040,
-        464
+        -704,
+        448
       ],
       "id": "d31013af-cd2c-4bdc-9e27-bf0c2b275781",
       "name": "If"
@@ -116,7 +116,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        224,
+        320,
         704
       ],
       "id": "67daaf29-56f3-414c-ba90-336fd64d2528",
@@ -124,76 +124,8 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "adf60794-3aeb-4a56-aa72-d130a5358b95",
-              "leftValue": "={{ $json.personal_email }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.2,
-      "position": [
-        -144,
-        256
-      ],
-      "id": "3149413f-9d4e-4e45-8fb8-507a2f90529f",
-      "name": "Filter"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "dca17f96-ce27-4405-b631-ff0ddaaf0c7d",
-              "leftValue": "={{ $json.full_name }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        32,
-        256
-      ],
-      "id": "8f5fc982-d5b9-462b-aecd-5c7eae59e3aa",
-      "name": "If1"
-    },
-    {
-      "parameters": {
         "promptType": "define",
-        "text": "=\n\nfirma: {{ $('Loop Over Items').item.json.name }}\n- branche: {{ $('Loop Over Items').item.json.branche }}\n- pain_points: {{ $('Loop Over Items').item.json.pain_point }}\n- booking_mode: {{ $('Loop Over Items').item.json.booking_mode }}\n- opening_hours_analysis: {{ $('Loop Over Items').item.json.opening_hours_analysis }}\n- contact_person: \n  - Name: {{ $json.full_name }}\n  - Rolle: {{ $json.role }}",
+        "text": "=\n\nfirma: {{ $('Execute a SQL query').item.json.name }}\n- branche: {{ $('Execute a SQL query').item.json.branche }}\n- pain_points: {{ $('Execute a SQL query').item.json.pain_point }}\n- booking_mode: {{ $('Execute a SQL query').item.json.booking_mode }}\n- opening_hours_analysis: {{ $('Execute a SQL query').item.json.opening_hours_analysis }}\n- contact_person: \n  - Name: {{ $json.full_name }}\n  - Rolle: {{ $json.role }}",
         "hasOutputParser": true,
         "options": {
           "systemMessage": "Du bist ein erfahrener Sales Development Representative (SDR) für Telora.ai, ein frisches, dynamisches KI-Startup aus München.\n\nDEINE AUFGABE:\nErstelle eine hoch-personalisierte Cold-Email (Betreff + Body) direkt an den Geschäftsführer/Inhaber eines deutschen KMU.\nDu hast die persönliche E-Mail-Adresse und den vollen Namen des Entscheiders.\n\nDEIN ZIEL:\nDen Geschäftsführer direkt abholen, Relevanz beweisen und Neugier wecken. Das Ziel ist KEIN direkter Verkauf (\"Kaufen Sie jetzt\"), sondern ein Call-Booking (Terminvereinbarung).\n\nDEIN INPUT (JSON-Daten):\n- firma: Name des Unternehmens\n- website: URL\n- branche: Branche (z.B. SHK, Gastro)\n- pain_points: Analyse der Schmerzpunkte (z.B. \"Mittagspause geschlossen\")\n- booking_mode: Wie man aktuell bucht (Telefon, Email, Tool)\n- opening_hours_analysis: Kritische Lücken in der Erreichbarkeit\n- contact_person: { full_name: \"Max Müller\", rolle: \"Geschäftsführer\", email: \"max@firma.de\" }\n- direct_mail: Die persönliche Empfänger-Adresse (nutze diese!)\n\nSTRATEGIE & ARGUMENTATION (Telora Playbook):\n1.  **Positionierung:** Wir sind kein anonymes Callcenter, sondern bieten einen \"Managed Service\" aus München. Wir kümmern uns um Einrichtung & Wartung (\"Done-for-you\"). Das ist wichtig für GFs, die keine \"neue IT-Baustelle\" wollen.\n2.  **Wording-Regeln:**\n    * SAG: \"KI-Telefonassistent\", \"Automatisierung\", \"Erreichbarkeit\", \"Umsatzsicherung\".\n    * VERMEIDE: \"Roboter\", \"Bot\", \"Callcenter\", \"fehlerfrei\", \"perfekt\".\n3.  **Der Hook:** Nutze die `opening_hours_analysis` und `booking_mode`. Wenn sie telefonisch Termine machen, aber mittags zu haben -> Argumentiere mit \"verlorenem Umsatz\" oder \"Kundenzufriedenheit\" (Chef-Themen).\n4.  **Regionalität:** Erwähne subtil \"Grüße aus München\" oder \"Münchener Startup\", um Vertrauen zu schaffen (DSGVO/Qualität).\n\nAUFBAU DER EMAIL:\n\n1.  **Betreff:** Muss extrem relevant wirken (kein Spam-Charakter). Kurz und knackig.\n    * Muster: \"Idee für [Firma] bzgl. Erreichbarkeit\" oder \"Frage an Sie, Herr [Nachname]\".\n\n2.  **Anrede:**\n    * Direkt und persönlich.\n    * Beispiel: \"Hallo Herr [Nachname],\" oder \"Guten Tag Frau [Nachname],\"\n\n3.  **Der \"Pain\" (Personalisierung & Recherchebeweis):**\n    * Steig direkt ein. Zeig, dass du dich vorbereitet hast.\n    * Beziehe dich auf die Analyse: \"Ich habe mir Ihre Website angesehen und bemerkt, dass Sie telefonische Terminvereinbarungen anbieten, aber freitags ab 13 Uhr nicht mehr erreichbar sind.\"\n    * Business Impact (für den Chef): \"Gerade im [Branche] ist es ärgerlich, wenn Anrufer und damit potenzielle Aufträge ins Leere laufen.\"\n\n4.  **Die Lösung (Telora Pitch):**\n    * Stelle Telora als die stressfreie Lösung vor.\n    * WICHTIG: Betone \"Managed Service\" – der Chef muss nichts programmieren.\n    * Beispiel: \"Wir bei Telora (Startup aus München) bauen KI-Telefonassistenten, die genau diese Anrufe rund um die Uhr annehmen und qualifizieren – komplett als Managed Service, ohne dass Sie sich um die Technik kümmern müssen.\"\n\n5.  **Call to Action (CTA):**\n    * Respektiere seine Zeit. Biete einen kurzen Austausch oder eine Demo an.\n    * Link ZWINGEND einfügen: `https://telora.ai/contact`\n\nTONALITÄT:\nProfessionell, auf Augenhöhe, aber \"Startup-Frisch\". Respektvoll, aber selbstbewusst (Expertise zeigen). Bayerisch-Sympathisch (optional in der Verabschiedung), aber hochdeutsch im Inhalt. Authentisch."
@@ -202,8 +134,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        768,
-        432
+        608,
+        384
       ],
       "id": "cd54b8d3-da6e-4a6a-b708-ae08c8426e7e",
       "name": "Mit Inhaber an Firmenmail"
@@ -211,7 +143,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=\nfirma: {{ $('Loop Over Items').item.json.name }}\n- branche: {{ $('Loop Over Items').item.json.branche }}\n- pain_points: {{ $('Loop Over Items').item.json.pain_point }}\n- booking_mode: {{ $('Loop Over Items').item.json.booking_mode }}\n- opening_hours_analysis: {{ $('Loop Over Items').item.json.opening_hours_analysis }}\n- contact_person: \n  - Name: {{ $json.full_name }}\n  - Rolle: {{ $json.role }}",
+        "text": "=\n\nfirma: {{ $('Execute a SQL query').item.json.name }}\n- branche: {{ $('Execute a SQL query').item.json.branche }}\n- pain_points: {{ $('Execute a SQL query').item.json.pain_point }}\n- booking_mode: {{ $('Execute a SQL query').item.json.booking_mode }}\n- opening_hours_analysis: {{ $('Execute a SQL query').item.json.opening_hours_analysis }}\n- contact_person: \n  - Name: {{ $json.full_name }}\n  - Rolle: {{ $json.role }}",
         "hasOutputParser": true,
         "options": {
           "systemMessage": "=Du bist ein erfahrener Sales Development Representative (SDR) für Telora.ai, ein frisches, dynamisches KI-Startup aus München.\n\nDEINE AUFGABE:\nErstelle eine hoch-personalisierte Cold-Email (Betreff + Body) direkt an den Geschäftsführer/Inhaber eines deutschen KMU. Und gebe die Emailadresse weiter.\nDu hast die persönliche E-Mail-Adresse und den vollen Namen des Entscheiders.\n\nDEIN ZIEL:\nDen Geschäftsführer direkt abholen, Relevanz beweisen und Neugier wecken. Das Ziel ist KEIN direkter Verkauf (\"Kaufen Sie jetzt\"), sondern ein Call-Booking (Terminvereinbarung).\n\nDEIN INPUT (JSON-Daten):\n- firma: Name des Unternehmens\n- website: URL\n- branche: Branche (z.B. SHK, Gastro)\n- pain_points: Analyse der Schmerzpunkte (z.B. \"Mittagspause geschlossen\")\n- booking_mode: Wie man aktuell bucht (Telefon, Email, Tool)\n- opening_hours_analysis: Kritische Lücken in der Erreichbarkeit\n- contact_person: { full_name: \"Max Müller\", rolle: \"Geschäftsführer\", email: \"max@firma.de\" }\n- direct_mail: Die persönliche Empfänger-Adresse (nutze diese!)\n\nSTRATEGIE & ARGUMENTATION (Telora Playbook):\n1.  **Positionierung:** Wir sind kein anonymes Callcenter, sondern bieten einen \"Managed Service\" aus München. Wir kümmern uns um Einrichtung & Wartung (\"Done-for-you\"). Das ist wichtig für GFs, die keine \"neue IT-Baustelle\" wollen.\n2.  **Wording-Regeln:**\n    * SAG: \"KI-Telefonassistent\", \"Automatisierung\", \"Erreichbarkeit\", \"Umsatzsicherung\".\n    * VERMEIDE: \"Roboter\", \"Bot\", \"Callcenter\", \"fehlerfrei\", \"perfekt\".\n3.  **Der Hook:** Nutze die `opening_hours_analysis` und `booking_mode`. Wenn sie telefonisch Termine machen, aber mittags zu haben -> Argumentiere mit \"verlorenem Umsatz\" oder \"Kundenzufriedenheit\" (Chef-Themen).\n4.  **Regionalität:** Erwähne subtil \"Grüße aus München\" oder \"Münchener Startup\", um Vertrauen zu schaffen (DSGVO/Qualität).\n\nAUFBAU DER EMAIL:\n\n1.  **Betreff:** Muss extrem relevant wirken (kein Spam-Charakter). Kurz und knackig.\n    * Muster: \"Idee für [Firma] bzgl. Erreichbarkeit\" oder \"Frage an Sie, Herr [Nachname]\".\n\n2.  **Anrede:**\n    * Direkt und persönlich.\n    * Beispiel: \"Hallo Herr [Nachname],\" oder \"Guten Tag Frau [Nachname],\"\n\n3.  **Der \"Pain\" (Personalisierung & Recherchebeweis):**\n    * Steig direkt ein. Zeig, dass du dich vorbereitet hast.\n    * Beziehe dich auf die Analyse: \"Ich habe mir Ihre Website angesehen und bemerkt, dass Sie telefonische Terminvereinbarungen anbieten, aber freitags ab 13 Uhr nicht mehr erreichbar sind.\"\n    * Business Impact (für den Chef): \"Gerade im [Branche] ist es ärgerlich, wenn Anrufer und damit potenzielle Aufträge ins Leere laufen.\"\n\n4.  **Die Lösung (Telora Pitch):**\n    * Stelle Telora als die stressfreie Lösung vor.\n    * WICHTIG: Betone \"Managed Service\" – der Chef muss nichts programmieren.\n    * Beispiel: \"Wir bei Telora (Startup aus München) bauen KI-Telefonassistenten, die genau diese Anrufe rund um die Uhr annehmen und qualifizieren – komplett als Managed Service, ohne dass Sie sich um die Technik kümmern müssen.\"\n\n5.  **Call to Action (CTA):**\n    * Respektiere seine Zeit. Biete einen kurzen Austausch oder eine Demo an.\n    * Link ZWINGEND einfügen: `https://telora.ai/contact`\n\nTONALITÄT:\nProfessionell, auf Augenhöhe, aber \"Startup-Frisch\". Respektvoll, aber selbstbewusst (Expertise zeigen). Bayerisch-Sympathisch (optional in der Verabschiedung), aber hochdeutsch im Inhalt. Authentisch."
@@ -220,34 +152,21 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        768,
-        144
+        832,
+        0
       ],
       "id": "e196abe9-b972-40da-8b50-8b2662153fa4",
       "name": "Mit Inhaber an Inhabermail"
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        304,
-        -64
-      ],
-      "id": "d516f260-da1d-4978-b0eb-1f9898d884c9",
-      "name": "Loop Over Items1"
-    },
-    {
-      "parameters": {
         "schemaType": "manual",
-        "inputSchema": "{\n  \"email\": \"empfaenger@beispiel.de\",\n  \"betreff\": \"Kurze Frage zu Ihrer Erreichbarkeit\",\n  \"body\": \"Hallo Herr Müller,<br><br>ich habe gesehen...\"\n}"
+        "inputSchema": "={\n  \"email\": \"empfaenger@beispiel.de\",\n  \"subject\": \"Kurze Frage zu Ihrer Erreichbarkeit\",\n  \"body\": \"Hallo Herr Müller,<br><br>ich habe gesehen...\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        912,
+        1120,
         976
       ],
       "id": "c462d95c-a782-4b4d-9bd3-fb85d8779345",
@@ -281,7 +200,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -752,
+        -240,
         448
       ],
       "id": "89e9ec34-eab6-4990-8833-de1e297a74de",
@@ -296,8 +215,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -272,
-        528
+        -1136,
+        112
       ],
       "id": "d8de4540-8ce1-4e52-b4c6-1904d16fd57a",
       "name": "Merge"
@@ -306,16 +225,24 @@
       "parameters": {
         "model": {
           "__rl": true,
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "value": "gpt-4.1-mini"
+          "cachedResultName": "gpt-4o-mini"
         },
         "builtInTools": {},
-        "options": {}
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "schema": "={\n  \"type\": \"object\",\n  \"properties\": {\n    \"email\": {\n      \"type\": \"string\"\n    },\n    \"subject\": {\n      \"type\": \"string\"\n    },\n    \"body\": {\n      \"type\": \"string\"\n    }\n  },\n  \"additionalProperties\": false,\n  \"required\": [\"email\", \"subject\", \"body\"]\n}"
+            }
+          }
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        768,
+        976,
         976
       ],
       "id": "f60b785d-106d-4492-9456-8bf9bb683278",
@@ -330,17 +257,17 @@
     {
       "parameters": {
         "resource": "draft",
-        "subject": "={{ $json.output.betreff }}",
+        "subject": "={{ $json.output.subject }}",
         "message": "={{ $json.output.body }}",
         "options": {
-          "sendTo": "={{ $json.output.email_adresse }}"
+          "sendTo": "={{ $('If2').item.json.personal_email }}"
         }
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1328,
-        480
+        1472,
+        224
       ],
       "id": "e1a76d6a-5e89-42ea-9504-3cc63b42c1cd",
       "name": "Create a draft",
@@ -358,13 +285,13 @@
         "subject": "={{ $json.output.subject }}",
         "message": "={{ $json.output.body }}",
         "options": {
-          "sendTo": "={{ $('Merge').item.json.general_email }}"
+          "sendTo": "={{ $('If3').item.json.general_email }}"
         }
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        576,
+        784,
         1216
       ],
       "id": "b73b7eba-9c67-4c42-a930-c93e20ca0ed2",
@@ -380,38 +307,17 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "UPDATE companies\nSET status = 'draft'\nWHERE id = '{{ $('Merge').item.json.id }}'",
+        "query": "UPDATE companies\nSET status = 'draft'\nWHERE id = '{{ $json.companyid }}'",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        784,
-        1216
+        -864,
+        112
       ],
       "id": "fa05d807-8135-49b1-81dc-fd837499b332",
       "name": "Execute a SQL query2",
-      "credentials": {
-        "postgres": {
-          "id": "jouw35SfnifnYHRL",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE companies\nSET status = 'draft'\nWHERE id = '{{ $('Loop Over Items').item.json.id }}'",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -64,
-        -96
-      ],
-      "id": "1c649683-0d37-4131-84f8-fcb88845ec7a",
-      "name": "Execute a SQL query3",
       "credentials": {
         "postgres": {
           "id": "jouw35SfnifnYHRL",
@@ -432,24 +338,11 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -2464,
-        528
+        -2560,
+        688
       ],
       "id": "da87c7d9-1611-4fb4-b039-3f5d6cc14073",
       "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        304,
-        448
-      ],
-      "id": "a01f8a32-f35b-48bf-a014-0565ad2e23b7",
-      "name": "Loop Over Items2"
     },
     {
       "parameters": {
@@ -462,7 +355,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1840,
+        -1616,
         704
       ],
       "id": "9d117a34-0601-44e2-8401-50ba9ce79659",
@@ -504,30 +397,118 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1952,
-        448
+        -1728,
+        464
       ],
       "id": "f760ee0f-f2c7-4f7a-a62b-eefcbeaf13b4",
       "name": "If3"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.output.body }}",
+        "message": "={{ $json.output.body }}",
+        "options": {
+          "sendTo": "={{ $('If3').item.json.general_email }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1408,
+        496
+      ],
+      "id": "680cff50-11a6-47fe-9f85-f7ff678a06eb",
+      "name": "Create a draft2",
+      "webhookId": "0bb183a5-0e87-4b17-9028-ffc470f025b5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "xSY0y36NIf6Vj4nN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0553055f-0867-407f-890a-6965ae1f9b7a",
+              "name": "companyid",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2032,
+        560
+      ],
+      "id": "e6535399-8f92-4bd1-9a61-2187d26b4217",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -976,
+        448
+      ],
+      "id": "85a48644-80ac-4ed6-aa8d-6552e6657e42",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE companies\nSET status = 'working'\nWHERE id = '{{ $json.id }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2096,
+        320
+      ],
+      "id": "e63c7474-085c-4aef-ac32-ceb0edc65c59",
+      "name": "Execute a SQL query3",
+      "credentials": {
+        "postgres": {
+          "id": "jouw35SfnifnYHRL",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "connections": {
     "When clicking ‘Execute workflow’": {
       "main": [
-        [
-          {
-            "node": "Execute a SQL query",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Execute a SQL query": {
       "main": [
         [
           {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "If3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute a SQL query3",
             "type": "main",
             "index": 0
           }
@@ -536,15 +517,16 @@
     },
     "Loop Over Items": {
       "main": [
-        [],
         [
           {
-            "node": "Execute a SQL query1",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
             "type": "main",
             "index": 1
           }
@@ -555,7 +537,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -573,7 +555,7 @@
         ],
         [
           {
-            "node": "Merge",
+            "node": "Ohne Inhaber an Firmenmail",
             "type": "main",
             "index": 0
           }
@@ -591,40 +573,11 @@
         ]
       ]
     },
-    "Filter": {
-      "main": [
-        [
-          {
-            "node": "If1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If1": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Loop Over Items2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Mit Inhaber an Firmenmail": {
       "main": [
         [
           {
-            "node": "Create a draft",
+            "node": "Create a draft2",
             "type": "main",
             "index": 0
           }
@@ -636,24 +589,6 @@
         [
           {
             "node": "Create a draft",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items1": {
-      "main": [
-        [
-          {
-            "node": "Execute a SQL query3",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Mit Inhaber an Inhabermail",
             "type": "main",
             "index": 0
           }
@@ -685,14 +620,14 @@
       "main": [
         [
           {
-            "node": "Filter",
+            "node": "Mit Inhaber an Inhabermail",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Merge",
+            "node": "Mit Inhaber an Firmenmail",
             "type": "main",
             "index": 0
           }
@@ -703,7 +638,7 @@
       "main": [
         [
           {
-            "node": "Ohne Inhaber an Firmenmail",
+            "node": "Execute a SQL query2",
             "type": "main",
             "index": 0
           }
@@ -735,12 +670,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Loop Over Items2",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -751,7 +681,7 @@
       "main": [
         [
           {
-            "node": "Execute a SQL query2",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -760,24 +690,7 @@
     },
     "Execute a SQL query2": {
       "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute a SQL query3": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "When Executed by Another Workflow": {
@@ -785,24 +698,6 @@
         [
           {
             "node": "Execute a SQL query",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items2": {
-      "main": [
-        [
-          {
-            "node": "Mit Inhaber an Firmenmail",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -818,7 +713,12 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Execute a SQL query1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
             "type": "main",
             "index": 0
           }
@@ -831,9 +731,50 @@
           }
         ]
       ]
+    },
+    "Create a draft2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query3": {
+      "main": [
+        []
+      ]
     }
   },
   "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {}
+    ],
     "When Executed by Another Workflow": [
       {
         "name": null

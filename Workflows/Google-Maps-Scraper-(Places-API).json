@@ -915,6 +915,7 @@
       ],
       "id": "145c69a3-158f-415c-9865-f6b5c7fe04bf",
       "name": "Insert rows in a table1",
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
           "id": "jouw35SfnifnYHRL",
@@ -935,7 +936,8 @@
         784
       ],
       "id": "da134690-5987-4f89-9558-981e9bbb0943",
-      "name": "Split Out1"
+      "name": "Split Out1",
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -966,7 +968,8 @@
         592
       ],
       "id": "4c8beb9a-5e97-4251-bd38-2142290543b6",
-      "name": "Merge2"
+      "name": "Merge2",
+      "alwaysOutputData": false
     },
     {
       "parameters": {
@@ -1386,48 +1389,38 @@
     }
   },
   "pinData": {
-    "Starts scraper workflow": [
-      {
-        "query": "München+Sanitär+Heizung",
-        "pageSize": 4
-      }
-    ],
     "Run workflow": [
       {
-        "query": "München+Sanitär+Heizung",
-        "pageSize": 1
+        "query": "München+Facilitymanagement",
+        "pageSize": 4
       },
       {
-        "query": "München+Elektriker",
-        "pageSize": 1
+        "query": "München+Fahrschule",
+        "pageSize": 4
       },
       {
-        "query": "München+Dachdecker",
-        "pageSize": 1
+        "query": "München+Reinigungsfirma",
+        "pageSize": 2
       },
       {
-        "query": "München+Hausverwaltung",
-        "pageSize": 1
+        "query": "München+IT-Service",
+        "pageSize": 4
       },
       {
-        "query": "München+Immobilienmakler",
-        "pageSize": 1
+        "query": "München+Gartenbau",
+        "pageSize": 2
       },
       {
-        "query": "München+Autohaus",
-        "pageSize": 1
+        "query": "München+Druckerei",
+        "pageSize": 2
       },
       {
-        "query": "München+Kfz+Werkstatt",
-        "pageSize": 1
+        "query": "München+Sicherheitsdienst",
+        "pageSize": 2
       },
       {
-        "query": "München+Restaurant",
-        "pageSize": 1
-      },
-      {
-        "query": "München+Hotel",
-        "pageSize": 1
+        "query": "München+Catering",
+        "pageSize": 2
       }
     ]
   },
