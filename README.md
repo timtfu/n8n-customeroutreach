@@ -64,9 +64,6 @@ CREATE POLICY "Allow authenticated SELECT on contacts"
     ON contacts FOR SELECT TO authenticated USING (true);
 
 CREATE POLICY "Allow authenticated INSERT on contacts"
-
-## Loom Video
-https://www.loom.com/share/368517bfc9fa48d487987bf5a99e57bc
     ON contacts FOR INSERT TO authenticated WITH CHECK (true);
 
 CREATE POLICY "Allow authenticated UPDATE on contacts" 
@@ -74,3 +71,7 @@ CREATE POLICY "Allow authenticated UPDATE on contacts"
 
 CREATE POLICY "Allow authenticated DELETE on contacts" 
     ON contacts FOR DELETE TO authenticated USING (true);
+
+```
+## Loom Video
+https://www.loom.com/share/368517bfc9fa48d487987bf5a99e57bc
