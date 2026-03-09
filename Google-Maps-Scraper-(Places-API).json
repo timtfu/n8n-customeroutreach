@@ -153,7 +153,7 @@
             },
             {
               "name": "X-Goog-Api-Key",
-              "value": "AIzaSyB_KgAY7Qwf72ZbLJ_hu-FJbntBalGrJRw"
+              "value": "YOUR-API-KEY"
             },
             {
               "name": "X-Goog-FieldMask",
